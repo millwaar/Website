@@ -1,6 +1,7 @@
 /* Millwaar: site interactions. No dependencies. */
 (() => {
   'use strict';
+  document.documentElement.classList.add('js');
 
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -59,8 +60,8 @@
   /* ---------- Syntax highlighting (KQL / GraphQL, lightweight) ---------- */
   const KW = 'where|summarize|project|extend|order|by|let|join|kind|on|take|mv-expand|in|has_any|has|matches|regex|and|or|not|desc|asc|query|top|count|distinct|union|sort|between|contains';
   const tokenRe = new RegExp(
-    String.raw`(\/\/[^\n]*|(?:^|(?<=\n))\s*#[^\n]*)|(@"[^"]*"|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(\d+(?:\.\d+)?[dhms]?)\b|\b(${KW})\b|\b([A-Za-z_][\w]*)(?=\()|(\||==|=~|!in~|in~|!=|>|<)`,
-    'g'
+    String.raw`(\/\/[^\n]*|^[ \t]*#[^\n]*)|(@"[^"]*"|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(\d+(?:\.\d+)?[dhms]?)\b|\b(${KW})\b|\b([A-Za-z_][\w]*)(?=\()|(\||==|=~|!in~|in~|!=|>|<)`,
+    'gm'
   );
   const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
   function highlight(code) {

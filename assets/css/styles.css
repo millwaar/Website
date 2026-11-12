@@ -473,8 +473,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .toast svg { width: 18px; height: 18px; color: var(--green); }
 
 /* Reveal on scroll -------------------------------------------------------- */
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-.reveal.is-visible { opacity: 1; transform: none; }
+.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.js .reveal.is-visible { opacity: 1; transform: none; }
 
 /* Article page ------------------------------------------------------------ */
 .progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--grad); z-index: 150; }
@@ -565,5 +565,5 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
-  .reveal { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1; transform: none; }
 }
