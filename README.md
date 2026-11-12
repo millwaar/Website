@@ -1,13 +1,13 @@
 # millwaar.co.uk
 
-A cyber security blog focused on the **Microsoft security stack** (Defender XDR, Sentinel, Entra ID, Intune, Purview, Defender for Cloud) and **Wiz**.
+A cyber security blog focused on the **Microsoft security stack** (Defender XDR, Sentinel, Entra ID, Intune, Purview, Defender for Cloud) and **Wiz.io**.
 
 It is a static site (plain HTML, CSS and JavaScript) with no build step and no dependencies, so it can be hosted on GitHub Pages, Azure Static Web Apps, Cloudflare Pages or anywhere else.
 
 ## Features
 
 - Dark and light themes that follow the system setting, with a toggle; the choice is remembered
-- Animated network-graph hero with a live-typing KQL/GraphQL console (Sentinel / XDR / Wiz tabs)
+- Animated network-graph hero with a live-typing KQL/GraphQL console (Sentinel / XDR / Wiz.io tabs)
 - Product "stack" tiles that filter the article list
 - Article grid with product filters, keyword search, "load more" and generated cover art
 - Command-palette search (`Ctrl/Cmd + K` or `/`)

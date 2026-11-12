@@ -72,23 +72,23 @@
       <article class="prose">
         <div class="callout" style="--accent:var(--cyan)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
-          <p><strong>TL;DR:</strong> Ingest Wiz issues into Sentinel, normalise the resource ID, join it against Defender for Cloud and Defender XDR alerts, then let an automation rule raise severity when a live alert lands on a resource that is already part of a Wiz toxic combination.</p>
+          <p><strong>TL;DR:</strong> Ingest Wiz.io issues into Sentinel, normalise the resource ID, join it against Defender for Cloud and Defender XDR alerts, then let an automation rule raise severity when a live alert lands on a resource that is already part of a Wiz.io toxic combination.</p>
         </div>
 
         <h2 id="why">Why bother correlating?</h2>
-        <p>Wiz is excellent at telling you <em>what could happen</em>: a public VM with a critical CVE and an identity that can read your customer data. Defender is excellent at telling you <em>what is happening</em>: a suspicious process, a credential dump, an anomalous sign-in. On their own, both create queues. Together they answer the question your SOC actually cares about: <strong>is this alert sitting on an attack path to something that matters?</strong></p>
+        <p>Wiz.io is excellent at telling you <em>what could happen</em>: a public VM with a critical CVE and an identity that can read your customer data. Defender is excellent at telling you <em>what is happening</em>: a suspicious process, a credential dump, an anomalous sign-in. On their own, both create queues. Together they answer the question your SOC actually cares about: <strong>is this alert sitting on an attack path to something that matters?</strong></p>
         <p>An alert on a throwaway dev box and the same alert on <code>vm-web-01</code>, one hop from a storage account full of PII, should not have the same priority. This article wires that context into Sentinel so the triage analyst sees it straight away.</p>
 
         <h2 id="architecture">Architecture</h2>
         <ul>
-          <li><strong>Wiz → Sentinel:</strong> the Wiz solution from the Sentinel Content Hub pulls issues, vulnerabilities and audit logs into custom tables.</li>
+          <li><strong>Wiz.io → Sentinel:</strong> the Wiz.io solution from the Sentinel Content Hub pulls issues, vulnerabilities and audit logs into custom tables.</li>
           <li><strong>Defender for Cloud &amp; Defender XDR → Sentinel:</strong> native connectors land alerts in <code>SecurityAlert</code> and incidents in <code>SecurityIncident</code>.</li>
           <li><strong>Correlation:</strong> a scheduled analytics rule joins the two on a normalised Azure resource ID.</li>
-          <li><strong>Response:</strong> an automation rule tags and escalates matching incidents, and a playbook posts the Wiz graph link to the incident.</li>
+          <li><strong>Response:</strong> an automation rule tags and escalates matching incidents, and a playbook posts the Wiz.io graph link to the incident.</li>
         </ul>
 
-        <h2 id="ingest">Step 1: Ingest Wiz issues</h2>
-        <p>Install the Wiz solution from Content Hub and configure the connector with a Wiz service account scoped to <code>read:issues</code> and <code>read:vulnerabilities</code>. Keep the scope tight: this account is a credential stored in your SIEM, so treat it as one.</p>
+        <h2 id="ingest">Step 1: Ingest Wiz.io issues</h2>
+        <p>Install the Wiz.io solution from Content Hub and configure the connector with a Wiz.io service account scoped to <code>read:issues</code> and <code>read:vulnerabilities</code>. Keep the scope tight: this account is a credential stored in your SIEM, so treat it as one.</p>
         <p>Once data is flowing, check the shape of what has arrived:</p>
         <div class="code-block">
           <div class="code-block__head"><span>check-ingest.kql</span><button class="copy-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
@@ -118,7 +118,7 @@
         <p>Now the scheduled analytics rule. Run it every 15 minutes over a one-hour lookback, and map <code>ResourceId</code> to an Azure Resource entity so it shows up on the incident graph.</p>
         <div class="code-block">
           <div class="code-block__head"><span>rule-wiz-toxic-alert.kql</span><button class="copy-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
-<pre><code>// Live alert on a resource that is part of a Wiz toxic combination
+<pre><code>// Live alert on a resource that is part of a Wiz.io toxic combination
 SecurityAlert
 | where TimeGenerated > ago(1h)
 | mv-expand Entity = todynamic(Entities)
@@ -137,15 +137,15 @@ SecurityAlert
         <ol>
           <li>Adds the tag <code>wiz-toxic-path</code> so it can be filtered in workbooks.</li>
           <li>Assigns it to your cloud response tier rather than the general queue.</li>
-          <li>Runs a playbook that comments the Wiz graph links on the incident, so the analyst can open the attack path in one click.</li>
+          <li>Runs a playbook that comments the Wiz.io graph links on the incident, so the analyst can open the attack path in one click.</li>
         </ol>
         <p>If the resource is a VM onboarded to Defender for Endpoint, consider a second playbook that offers device isolation behind an approval step. Isolation is very effective, and a misfire on a production web tier is very visible.</p>
 
         <h2 id="results">What good looks like</h2>
-        <p>After a month in production you should see a small number of high-fidelity incidents, each with a clear story: <em>this alert, on this resource, which reaches that data</em>. If the rule is noisy, the fix is almost always in Wiz: tighten which issue rules count as toxic, rather than piling exclusions into KQL.</p>
+        <p>After a month in production you should see a small number of high-fidelity incidents, each with a clear story: <em>this alert, on this resource, which reaches that data</em>. If the rule is noisy, the fix is almost always in Wiz.io: tighten which issue rules count as toxic, rather than piling exclusions into KQL.</p>
         <div class="callout" style="--accent:var(--green)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
-          <p><strong>Next up:</strong> building a Sentinel workbook that charts mean time to remediate for Wiz critical issues, broken down by subscription owner.</p>
+          <p><strong>Next up:</strong> building a Sentinel workbook that charts mean time to remediate for Wiz.io critical issues, broken down by subscription owner.</p>
         </div>
       </article>
 
@@ -202,7 +202,7 @@ SecurityAlert
     <div class="search-modal__panel">
       <div class="search-modal__input">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="text" placeholder="Search Sentinel, Wiz, Conditional Access…" aria-label="Search">
+        <input type="text" placeholder="Search Sentinel, Wiz.io, Conditional Access…" aria-label="Search">
         <span class="kbd">Esc</span>
       </div>
       <ul class="search-results" role="listbox"></ul>

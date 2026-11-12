@@ -32,14 +32,14 @@ MW.categories = [
     blurb: 'Sensitivity labels, DLP and insider risk, from the data outwards.' },
   { id: 'mdc', name: 'Defender for Cloud', short: 'MDC', icon: 'cloud', accent: '#fbbf24',
     blurb: 'CSPM, workload protection and multicloud posture across Azure, AWS and GCP.' },
-  { id: 'wiz', name: 'Wiz', short: 'Wiz', icon: 'graph', accent: '#818cf8', wide: true,
-    blurb: 'Agentless cloud security: the security graph, toxic combinations, attack paths, and how Wiz plays alongside the Microsoft stack.' }
+  { id: 'wiz', name: 'Wiz.io', short: 'Wiz.io', icon: 'graph', accent: '#818cf8', wide: true,
+    blurb: 'Agentless cloud security: the security graph, toxic combinations, attack paths, and how Wiz.io plays alongside the Microsoft stack.' }
 ];
 
 MW.posts = [
   { slug: 'wiz-to-sentinel-toxic-combinations', cat: 'wiz', featured: true, level: 3, read: 14, date: '2026-11-04',
-    title: 'Piping Wiz toxic combinations into Sentinel incidents',
-    excerpt: 'Correlate Wiz issues with Defender XDR alerts so your SOC sees the attack path, not just the alert. Data connector, KQL enrichment and an automation rule, end to end.' },
+    title: 'Piping Wiz.io toxic combinations into Sentinel incidents',
+    excerpt: 'Correlate Wiz.io issues with Defender XDR alerts so your SOC sees the attack path, not just the alert. Data connector, KQL enrichment and an automation rule, end to end.' },
   { slug: 'conditional-access-baseline-2026', cat: 'entra', level: 2, read: 11, date: '2026-10-28',
     title: 'A Conditional Access baseline for 2026',
     excerpt: 'Twelve policies, named locations and a break-glass design that survives a token theft attempt.' },
@@ -50,8 +50,8 @@ MW.posts = [
     title: 'Cutting Sentinel ingest costs without going blind',
     excerpt: 'Basic and Auxiliary logs, transformation rules and the tables you should never filter.' },
   { slug: 'wiz-security-graph-primer', cat: 'wiz', level: 1, read: 7, date: '2026-10-07',
-    title: 'The Wiz security graph, explained for Azure admins',
-    excerpt: 'How Wiz models identities, network exposure and secrets, and what that means for your landing zone.' },
+    title: 'The Wiz.io security graph, explained for Azure admins',
+    excerpt: 'How Wiz.io models identities, network exposure and secrets, and what that means for your landing zone.' },
   { slug: 'intune-asr-rollout', cat: 'intune', level: 2, read: 10, date: '2026-09-30',
     title: 'Rolling out ASR rules with Intune, without breaking finance',
     excerpt: 'Audit mode, exclusions that are actually safe and a phased ring deployment that keeps users happy.' },
@@ -59,7 +59,7 @@ MW.posts = [
     title: 'Purview DLP guardrails for Copilot and AI apps',
     excerpt: 'Labels, DLP for AI interactions and DSPM for AI: keep sensitive data out of prompts and responses.' },
   { slug: 'mdc-vs-wiz-cspm', cat: 'mdc', level: 2, read: 12, date: '2026-09-16',
-    title: 'Defender for Cloud CSPM and Wiz: overlap, gaps and running both',
+    title: 'Defender for Cloud CSPM and Wiz.io: overlap, gaps and running both',
     excerpt: 'A practitioner\'s comparison of attack path analysis, agentless scanning and where each tool earns its keep.' },
   { slug: 'workload-identity-hardening', cat: 'entra', level: 3, read: 13, date: '2026-09-09',
     title: 'Hardening workload identities: service principals are the new admins',
@@ -71,7 +71,7 @@ MW.posts = [
     title: 'Automatic attack disruption: what it does and what it won\'t',
     excerpt: 'Which scenarios trigger it, how to prepare your tenant and how to read the action centre afterwards.' },
   { slug: 'wiz-code-to-cloud', cat: 'wiz', level: 2, read: 10, date: '2026-08-19',
-    title: 'Code-to-cloud with Wiz and Azure DevOps pipelines',
+    title: 'Code-to-cloud with Wiz.io and Azure DevOps pipelines',
     excerpt: 'Scan IaC and container images in the pipeline and trace a cloud risk back to the commit that introduced it.' }
 ];
 
@@ -113,8 +113,8 @@ AADSignInEventsBeta
 | extend Encoded = extract(@"([A-Za-z0-9+/=]{40,})", 1, ProcessCommandLine)
 | extend Decoded = base64_decode_tostring(Encoded)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, Decoded` },
-  { id: 'wizcrit', title: 'Wiz criticals + XDR alerts', table: 'WizIssues_CL', cat: 'wiz',
-    desc: 'Joins critical Wiz issues with Defender for Cloud alerts on the same resource. Assumes Wiz issues are ingested into a custom table called <code>WizIssues_CL</code>: rename the table and columns to match your connector.',
+  { id: 'wizcrit', title: 'Wiz.io criticals + XDR alerts', table: 'WizIssues_CL', cat: 'wiz',
+    desc: 'Joins critical Wiz.io issues with Defender for Cloud alerts on the same resource. Assumes Wiz.io issues are ingested into a custom table called <code>WizIssues_CL</code>: rename the table and columns to match your connector.',
     code:
 `let wiz = WizIssues_CL
     | where TimeGenerated > ago(1d)
